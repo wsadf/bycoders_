@@ -43,7 +43,13 @@
         />
 
         <label for="cnpj">CNPJ:</label>
-        <input id="cnpj" v-model="props.formData.cnpj" type="text" />
+        <input
+          id="cnpj"
+          v-model="props.formData.cnpj"
+          type="text"
+          @blur="validateCnpj"
+        />
+        <span v-if="cnpjError" class="error">{{ cnpjError }}</span>
 
         <label for="abertura">Data de abertura:</label>
         <input
@@ -70,6 +76,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { defineProps, ref, computed } from "vue";
 
@@ -81,6 +88,7 @@ const props = defineProps({
 });
 
 let cpfError = ref("");
+let cnpjError = ref("");
 let dateError = ref("");
 let telefoneErrorPF = ref("");
 let telefoneErrorPJ = ref("");
@@ -102,6 +110,73 @@ const validateCpf = () => {
   } else {
     props.formData.cpf = "";
     cpfError.value = "CPF inválido";
+  }
+};
+
+const validarCNPJ = (cnpj) => {
+  cnpj = cnpj.replace(/[^\d]+/g, '');
+
+  if (cnpj.length !== 14) {
+      return false;
+  }
+
+  if (/^(\d)\1+$/.test(cnpj)) {
+      return false;
+  }
+
+  let tamanho = cnpj.length - 2;
+  let numeros = cnpj.substring(0, tamanho);
+  let digitos = cnpj.substring(tamanho);
+  let soma = 0;
+  let pos = tamanho - 7;
+  for (let i = tamanho; i >= 1; i--) {
+      soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+      if (pos < 2) {
+          pos = 9;
+      }
+  }
+  let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  if (resultado != parseInt(digitos.charAt(0))) {
+      return false;
+  }
+
+  tamanho = tamanho + 1;
+  numeros = cnpj.substring(0, tamanho);
+  soma = 0;
+  pos = tamanho - 7;
+  for (let i = tamanho; i >= 1; i--) {
+      soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+      if (pos < 2) {
+          pos = 9;
+      }
+  }
+  resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  if (resultado != parseInt(digitos.charAt(1))) {
+      return false;
+  }
+
+  return true;
+};
+
+const formatarCNPJ = (cnpj) => {
+  cnpj = cnpj.replace(/[^\d]+/g, '');
+
+  if (cnpj.length !== 14) {
+      throw new Error("CNPJ inválido para formatação");
+  }
+
+  return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+};
+
+const validateCnpj = () => {
+  const cleanedCnpj = props.formData?.cnpj.replace(/\D/g, "");
+
+  if (cleanedCnpj.length === 14 && validarCNPJ(cleanedCnpj)) {
+    props.formData.cnpj = formatarCNPJ(cleanedCnpj);
+    cnpjError.value = "";
+  } else {
+    props.formData.cnpj = "";
+    cnpjError.value = "CNPJ inválido";
   }
 };
 
@@ -139,33 +214,33 @@ const validateDate = (fieldName) => {
 
 const isValidCpf = (cpf) => {
   if (cpf.length !== 11 || /^(\d)\1*$/.test(cpf)) {
-        return false;
-      }
-      let sum;
-      let rest;
-      sum = 0;
-      for (let i = 1; i <= 9; i++) {
-        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-      }
-      rest = (sum * 10) % 11;
-      if (rest === 10 || rest === 11) {
-        rest = 0;
-      }
-      if (rest !== parseInt(cpf.substring(9, 10))) {
-        return false;
-      }
-      sum = 0;
-      for (let i = 1; i <= 10; i++) {
-        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-      }
-      rest = (sum * 10) % 11;
-      if (rest === 10 || rest === 11) {
-        rest = 0;
-      }
-      if (rest !== parseInt(cpf.substring(10, 11))) {
-        return false;
-      }
-      return true;
+    return false;
+  }
+  let sum;
+  let rest;
+  sum = 0;
+  for (let i = 1; i <= 9; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+  }
+  rest = (sum * 10) % 11;
+  if (rest === 10 || rest === 11) {
+    rest = 0;
+  }
+  if (rest !== parseInt(cpf.substring(9, 10))) {
+    return false;
+  }
+  sum = 0;
+  for (let i = 1; i <= 10; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+  }
+  rest = (sum * 10) % 11;
+  if (rest === 10 || rest === 11) {
+    rest = 0;
+  }
+  if (rest !== parseInt(cpf.substring(10, 11))) {
+    return false;
+  }
+  return true;
 };
 
 const maskPhoneNumberPF = () => {
@@ -228,6 +303,7 @@ const isFormValid = computed(() => {
     );
   } else if (props.formData.cadastroType === 'PJ') {
     return (
+      !cnpjError.value &&
       !dateError.value &&
       !telefoneErrorPJ.value &&
       props.formData.telefonePJ !== ""
@@ -253,10 +329,12 @@ const handleNextStep = () => {
       telefoneErrorPF.value = "Favor inserir um telefone";
     }
   } else if (props.formData.cadastroType === 'PJ') {
+    validateCnpj();
     validateDate('abertura');
     validatePhoneNumberPJ(props.formData.telefonePJ.replace(/\D/g, ""));
 
     if (
+      !cnpjError.value &&
       !dateError.value &&
       !telefoneErrorPJ.value &&
       props.formData.telefonePJ !== ""
