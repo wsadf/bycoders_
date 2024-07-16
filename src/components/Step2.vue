@@ -122,11 +122,7 @@ const maskDateInput = (fieldName) => {
 };
 
 const validateDate = (fieldName) => {
-<<<<<<< HEAD
   const inputValue = props.formData[fieldName];
-=======
-  const inputValue = props.formData[fieldName].trim();
->>>>>>> 0f82c1e6da8a1772b899af11cd6214bec9880c35
 
   if (inputValue === "") {
     dateError.value = `Campo ${fieldName} é obrigatório`;
@@ -142,8 +138,6 @@ const validateDate = (fieldName) => {
 };
 
 const isValidCpf = (cpf) => {
-  // Função de validação de CPF
-<<<<<<< HEAD
   if (cpf.length !== 11 || /^(\d)\1*$/.test(cpf)) {
         return false;
       }
@@ -172,8 +166,6 @@ const isValidCpf = (cpf) => {
         return false;
       }
       return true;
-=======
->>>>>>> 0f82c1e6da8a1772b899af11cd6214bec9880c35
 };
 
 const maskPhoneNumberPF = () => {
@@ -232,21 +224,13 @@ const isFormValid = computed(() => {
       !cpfError.value &&
       !dateError.value &&
       !telefoneErrorPF.value &&
-<<<<<<< HEAD
       props.formData.telefonePF !== ""
-=======
-      props.formData.telefonePF.trim() !== ""
->>>>>>> 0f82c1e6da8a1772b899af11cd6214bec9880c35
     );
   } else if (props.formData.cadastroType === 'PJ') {
     return (
       !dateError.value &&
       !telefoneErrorPJ.value &&
-<<<<<<< HEAD
       props.formData.telefonePJ !== ""
-=======
-      props.formData.telefonePJ.trim() !== ""
->>>>>>> 0f82c1e6da8a1772b899af11cd6214bec9880c35
     );
   }
 });
@@ -261,19 +245,11 @@ const handleNextStep = () => {
       !cpfError.value &&
       !dateError.value &&
       !telefoneErrorPF.value &&
-<<<<<<< HEAD
       props.formData.telefonePF !== ""
     ) {
       props.updateFormData(props.formData);
       props.nextStep();
     } else if (props.formData.telefonePF === "") {
-=======
-      props.formData.telefonePF.trim() !== ""
-    ) {
-      props.updateFormData(props.formData);
-      props.nextStep();
-    } else if (props.formData.telefonePF.trim() === "") {
->>>>>>> 0f82c1e6da8a1772b899af11cd6214bec9880c35
       telefoneErrorPF.value = "Favor inserir um telefone";
     }
   } else if (props.formData.cadastroType === 'PJ') {
@@ -283,19 +259,11 @@ const handleNextStep = () => {
     if (
       !dateError.value &&
       !telefoneErrorPJ.value &&
-<<<<<<< HEAD
       props.formData.telefonePJ !== ""
     ) {
       props.updateFormData(props.formData);
       props.nextStep();
     } else if (props.formData.telefonePJ === "") {
-=======
-      props.formData.telefonePJ.trim() !== ""
-    ) {
-      props.updateFormData(props.formData);
-      props.nextStep();
-    } else if (props.formData.telefonePJ.trim() === "") {
->>>>>>> 0f82c1e6da8a1772b899af11cd6214bec9880c35
       telefoneErrorPJ.value = "Favor inserir um telefone";
     }
   }
