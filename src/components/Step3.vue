@@ -7,7 +7,7 @@
 
       <div class="actions">
         <button type="button" @click="previousStep">Voltar</button>
-        <button type="submit" :disabled="isButtonDisabled">Continuar</button>
+        <button type="submit">Continuar</button>
       </div>
     </form>
   </div>
@@ -34,9 +34,4 @@ const handleNextStep = () => {
 const previousStep = () => {
   props.previousStep();
 };
-
-const isButtonDisabled = computed(() => {
-  return !props.formData.senha
-});
-
 </script>

@@ -12,7 +12,7 @@
         <option value="PJ">Pessoa Jurídica (PJ)</option>
       </select>
 
-      <button type="submit" :disabled="isButtonDisabled">Continuar</button>
+      <button type="submit" >Continuar</button>
     </form>
   </div>
 </template>
@@ -33,10 +33,6 @@ const validateEmail = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   emailError.value = emailPattern.test(props.formData.email) ? "" : "Por favor, insira um e-mail válido.";
 };
-
-const isButtonDisabled = computed(() => {
-  return !props.formData.email || !!emailError.value;
-});
 
 const handleNextStep = () => {
   if (!emailError.value) {
