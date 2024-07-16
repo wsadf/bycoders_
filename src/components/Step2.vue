@@ -16,7 +16,8 @@
         <span v-if="cpfError" class="error">{{ cpfError }}</span>
         
         <label for="nascimento">Data de nascimento:</label>
-        <input id="nascimento" v-model="props.formData.nascimento" />
+        <input id="nascimento" v-model="props.formData.nascimento" @input="maskDateInput" />
+        <span v-if="dateError" class="error">{{ dateError }}</span>
 
         <label for="telefone">Número de telefone:</label>
         <input id="telefone" v-model="props.formData.telefone" type="text" />
@@ -42,14 +43,14 @@
 
       <div class="actions">
         <button type="button" @click="props.previousStep">Voltar</button>
-        <button type="submit">Continuar</button>
+        <button type="submit" :disabled="!isFormValid">Continuar</button>
       </div>
     </form>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { defineProps, ref, computed } from "vue";
 
 const props = defineProps({
   formData: Object,
@@ -59,6 +60,7 @@ const props = defineProps({
 });
 
 let cpfError = ref("");
+let dateError = ref("");
 
 const formatCpf = (cpf) => {
   cpf = cpf.replace(/\D/g, "");
@@ -76,6 +78,38 @@ const validateCpf = () => {
   } else {
     props.formData.cpf = "";
     cpfError.value = "CPF inválido";
+  }
+};
+
+const maskDateInput = () => {
+  let maskedValue = props.formData.nascimento
+    .replace(/\D/g, '')
+    .replace(/(\d{2})(\d)/, '$1/$2')
+    .replace(/(\d{2})(\d)/, '$1/$2')
+    .replace(/(\d{4})\d*/, '$1');
+  props.formData.nascimento = maskedValue;
+
+  // Limpar dateError se uma data válida for inserida
+  if (maskedValue.length === 10) {
+    validateDate();
+  } else {
+    dateError.value = '';
+  }
+};
+
+const validateDate = () => {
+  const inputValue = props.formData.nascimento.trim();
+
+  if (inputValue === '') {
+    dateError.value = 'Data de nascimento é obrigatória';
+  } else {
+    const d1 = Date.parse(inputValue.replace(/([0-9]+)\/([0-9]+)/, '$2/$1'));
+
+    if (isNaN(d1)) {
+      dateError.value = 'Data de nascimento inválida';
+    } else {
+      dateError.value = '';
+    }
   }
 };
 
@@ -110,8 +144,23 @@ const isValidCpf = (cpf) => {
   return true;
 };
 
+const isFormValid = computed(() => {
+  return !cpfError.value && !dateError.value;
+});
+
 const handleNextStep = () => {
-  props.updateFormData(props.formData);
-  props.nextStep();
+  validateCpf();
+  validateDate();
+
+  if (!cpfError.value && !dateError.value) {
+    props.updateFormData(props.formData);
+    props.nextStep();
+  }
 };
 </script>
+
+<style>
+.error {
+  color: red;
+}
+</style>
