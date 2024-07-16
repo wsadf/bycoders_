@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Passo 1</h2>
+    <h2>Seja bem vindo(a)</h2>
     <form @submit.prevent="handleNextStep">
       <label for="email">Endereço de e-mail:</label>
       <input id="email" v-model="formData.email" type="email" @input="validateEmail" />

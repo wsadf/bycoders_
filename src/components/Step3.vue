@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>Passo 3</h2>
+    <h2>Senha de acesso</h2>
     <form @submit.prevent="handleNextStep">
-      <label for="senha">Senha de acesso:</label>
+      <label for="senha">Sua senha:</label>
       <input id="senha" v-model="formData.senha" type="password" required />
 
       <div class="actions">

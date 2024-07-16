@@ -5,7 +5,7 @@
       <h3>Revisar Informações</h3>
 
       <div class="form-section">
-        <p><strong>Email:</strong> {{ formData.email }}</p>
+        <p><strong>Endereço de email:</strong> {{ formData.email }}</p>
         <p><strong>Tipo de Cadastro:</strong> {{ formData.cadastroType }}</p>
       </div>
 

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>Passo 2</h2>
     <form @submit.prevent="handleNextStep">
       <div v-if="props.formData?.cadastroType === 'PF'">
+        <h2>Pessoa Física</h2>
         <label for="nome">Nome:</label>
         <input id="nome" v-model="props.formData.nome" type="text" />
 
@@ -19,7 +19,7 @@
         <input
           id="nascimento"
           v-model="props.formData.nascimento"
-          @input="maskDateInput"
+          @input="maskDateInput('nascimento')"
         />
         <span v-if="dateError" class="error">{{ dateError }}</span>
 
@@ -34,6 +34,7 @@
       </div>
 
       <div v-if="props.formData?.cadastroType === 'PJ'">
+        <h2>Pessoa Jurídica</h2>
         <label for="razaoSocial">Razão Social:</label>
         <input
           id="razaoSocial"
@@ -44,11 +45,20 @@
         <label for="cnpj">CNPJ:</label>
         <input id="cnpj" v-model="props.formData.cnpj" type="text" />
 
-        <label for="abertura">Data de abertura da empresa:</label>
-        <input id="abertura" v-model="props.formData.abertura" />
+        <label for="abertura">Data de abertura:</label>
+        <input
+          id="abertura"
+          v-model="props.formData.abertura"
+          @input="maskDateInput('abertura')"
+        />
 
         <label for="telefone">Telefone:</label>
-        <input id="telefone" v-model="props.formData.telefone" type="text" />
+        <input
+          id="telefone"
+          v-model="props.formData.telefone"
+          type="text"
+          @input="maskPhoneNumber"
+        />
       </div>
 
       <div class="actions">
@@ -92,16 +102,17 @@ const validateCpf = () => {
   }
 };
 
-const maskDateInput = () => {
-  let maskedValue = props.formData.nascimento
+const maskDateInput = (fieldName) => {
+  let fieldValue = props.formData[fieldName];
+  let maskedValue = fieldValue
     .replace(/\D/g, "")
     .replace(/(\d{2})(\d)/, "$1/$2")
     .replace(/(\d{2})(\d)/, "$1/$2")
     .replace(/(\d{4})\d*/, "$1");
-  props.formData.nascimento = maskedValue;
+  props.formData[fieldName] = maskedValue;
 
   if (maskedValue.length === 10) {
-    validateDate();
+    validateDate(fieldName);
   } else {
     dateError.value = "";
   }
@@ -190,7 +201,8 @@ const isFormValid = computed(() => {
 
 const handleNextStep = () => {
   validateCpf();
-  validateDate();
+  validateDate('nascimento');
+  validateDate('abertura');
   validatePhoneNumber(props.formData.telefone.replace(/\D/g, ""));
 
   if (
