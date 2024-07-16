@@ -1,34 +1,36 @@
 <template>
   <div id="app">
-    <component :is="currentStepComponent" 
-               :formData="formData" 
-               :updateFormData="updateFormData" 
-               :previousStep="previousStep" 
-               :nextStep="nextStep" 
-               :submitForm="submitForm" />
+    <component
+      :is="currentStepComponent"
+      :formData="formData"
+      :updateFormData="updateFormData"
+      :previousStep="previousStep"
+      :nextStep="nextStep"
+      :submitForm="submitForm"
+    />
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
-import Step1 from './components/Step1.vue';
-import Step2 from './components/Step2.vue';
-import Step3 from './components/Step3.vue';
-import Step4 from './components/Step4.vue';
+import { ref, computed } from "vue";
+import Step1 from "./components/Step1.vue";
+import Step2 from "./components/Step2.vue";
+import Step3 from "./components/Step3.vue";
+import Step4 from "./components/Step4.vue";
 
 export default {
   setup() {
     const formData = ref({
-      email: '',
-      cadastroType: 'PF',
-      nome: '',
-      cpf: '',
-      nascimento: '',
-      telefone: '',
-      razaoSocial: '',
-      cnpj: '',
-      abertura: '',
-      senha: ''
+      email: "",
+      cadastroType: "PF",
+      nome: "",
+      cpf: "",
+      nascimento: "",
+      telefone: "",
+      razaoSocial: "",
+      cnpj: "",
+      abertura: "",
+      senha: "",
     });
 
     const step = ref(1);
@@ -53,7 +55,7 @@ export default {
     };
 
     const submitForm = () => {
-      console.log('Form data submitted:', formData.value);
+      console.log("Form data submitted:", formData.value);
       // Aqui você pode fazer uma requisição para a API de cadastro.
     };
 
@@ -63,16 +65,16 @@ export default {
       updateFormData,
       previousStep,
       nextStep,
-      submitForm
+      submitForm,
     };
-  }
+  },
 };
 </script>
 
 <style>
 /* Estilos globais */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
   display: flex;
@@ -101,6 +103,18 @@ form {
   flex-direction: column;
 }
 
+.form-section {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+.form-section p {
+  margin: 5px 0;
+}
+
 label {
   margin: 10px 0 5px;
   font-weight: 700;
@@ -109,7 +123,9 @@ label {
   text-align: left;
 }
 
-input, select, button {
+input,
+select,
+button {
   padding: 12px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
@@ -120,8 +136,10 @@ input, select, button {
   width: 100%;
 }
 
-input:focus, select:focus, button:focus {
-  border-color: #007BFF;
+input:focus,
+select:focus,
+button:focus {
+  border-color: #007bff;
   outline: none;
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
   color: #171616;
@@ -147,7 +165,7 @@ button:hover {
   color: #171616;
 }
 
-.actions { 
+.actions {
   display: flex;
 }
 @media (max-width: 600px) {
