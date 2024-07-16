@@ -7,14 +7,14 @@
 
       <div class="actions">
         <button type="button" @click="previousStep">Voltar</button>
-        <button type="submit">Continuar</button>
+        <button type="submit" :disabled="isButtonDisabled">Continuar</button>
       </div>
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineProps } from "vue";
 
 const props = defineProps({
@@ -34,4 +34,9 @@ const handleNextStep = () => {
 const previousStep = () => {
   props.previousStep();
 };
+
+const isButtonDisabled = computed(() => {
+  return !props.formData.senha
+});
+
 </script>

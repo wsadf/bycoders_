@@ -100,7 +100,6 @@ const maskDateInput = () => {
     .replace(/(\d{4})\d*/, "$1");
   props.formData.nascimento = maskedValue;
 
-  // Limpar dateError se uma data válida for inserida
   if (maskedValue.length === 10) {
     validateDate();
   } else {
@@ -157,16 +156,18 @@ const isValidCpf = (cpf) => {
 
 const maskPhoneNumber = () => {
   let phone_number = props.formData.telefone;
-  phone_number = phone_number.replace(/\D/g, '');
+  phone_number = phone_number.replace(/\D/g, "");
 
-  // Aplicar a máscara (00) 0000-0000 ou (00) 00000-0000
   if (phone_number.length <= 10) {
-    props.formData.telefone = phone_number.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{4})(\d)/, '$1-$2');
+    props.formData.telefone = phone_number
+      .replace(/^(\d{2})(\d)/g, "($1) $2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
   } else {
-    props.formData.telefone = phone_number.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
+    props.formData.telefone = phone_number
+      .replace(/^(\d{2})(\d)/g, "($1) $2")
+      .replace(/(\d{5})(\d)/, "$1-$2");
   }
 
-  // Validar o telefone
   validatePhoneNumber(phone_number);
 };
 
@@ -179,15 +180,25 @@ const validatePhoneNumber = (phone_number) => {
 };
 
 const isFormValid = computed(() => {
-  return !cpfError.value && !dateError.value && !telefoneError.value && props.formData.telefone.trim() !== "";
+  return (
+    !cpfError.value &&
+    !dateError.value &&
+    !telefoneError.value &&
+    props.formData.telefone.trim() !== ""
+  );
 });
 
 const handleNextStep = () => {
   validateCpf();
   validateDate();
-  validatePhoneNumber(props.formData.telefone.replace(/\D/g, ''));
+  validatePhoneNumber(props.formData.telefone.replace(/\D/g, ""));
 
-  if (!cpfError.value && !dateError.value && !telefoneError.value && props.formData.telefone.trim() !== "") {
+  if (
+    !cpfError.value &&
+    !dateError.value &&
+    !telefoneError.value &&
+    props.formData.telefone.trim() !== ""
+  ) {
     props.updateFormData(props.formData);
     props.nextStep();
   } else if (props.formData.telefone.trim() === "") {
