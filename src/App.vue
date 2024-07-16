@@ -65,7 +65,6 @@ const submitForm = () => {
 </script>
 
 <style>
-/* Estilos globais */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;
@@ -120,7 +119,7 @@ input,
 select,
 button {
   padding: 12px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
@@ -158,9 +157,23 @@ button:hover {
   color: #171616;
 }
 
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
 .actions {
   display: flex;
 }
+
+.error {
+  color: red;
+  font-size: 12px;
+  display: block;
+  text-align: left;
+}
+
 @media (max-width: 600px) {
   #app {
     padding: 15px;
