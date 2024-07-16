@@ -3,11 +3,11 @@
     <h2>Passo 1</h2>
     <form @submit.prevent="handleNextStep">
       <label for="email">Endereço de e-mail:</label>
-      <input id="email" v-model="email" type="email" @input="validateEmail" />
+      <input id="email" v-model="formData.email" type="email" @input="validateEmail" />
       <span v-if="emailError" class="error">{{ emailError }}</span>
 
       <label for="cadastro">Tipo de cadastro:</label>
-      <select id="cadastro" v-model="cadastroType">
+      <select id="cadastro" v-model="formData.cadastroType">
         <option value="PF">Pessoa Física (PF)</option>
         <option value="PJ">Pessoa Jurídica (PJ)</option>
       </select>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { defineProps } from "vue";
 
 const props = defineProps({
@@ -27,30 +27,19 @@ const props = defineProps({
   nextStep: Function,
 });
 
-const email = ref(props.formData.email);
-const cadastroType = ref(props.formData.cadastroType);
 const emailError = ref("");
 
-// Validação do e-mail
 const validateEmail = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  emailError.value = emailPattern.test(email.value) ? "" : "Por favor, insira um e-mail válido.";
+  emailError.value = emailPattern.test(props.formData.email) ? "" : "Por favor, insira um e-mail válido.";
 };
 
-// Computed para desabilitar o botão
 const isButtonDisabled = computed(() => {
-  return !email.value || !!emailError.value;
+  return !props.formData.email || !!emailError.value;
 });
-
-// Assista a mudanças no email para validar quando mudar
-watch(email, validateEmail);
 
 const handleNextStep = () => {
   if (!emailError.value) {
-    props.updateFormData({
-      email: email.value,
-      cadastroType: cadastroType.value,
-    });
     props.nextStep();
   }
 };

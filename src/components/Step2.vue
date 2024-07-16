@@ -2,46 +2,46 @@
   <div>
     <h2>Passo 2</h2>
     <form @submit.prevent="handleNextStep">
-      <div v-if="cadastroType === 'PF'">
+      <div v-if="props.formData?.cadastroType === 'PF'">
         <label for="nome">Nome:</label>
-        <input id="nome" v-model="formData.nome" type="text" required />
+        <input id="nome" v-model="props.formData.nome" type="text" />
 
         <label for="cpf">CPF:</label>
-        <input id="cpf" v-model="formData.cpf" type="text" required />
-
-        <label for="nascimento">Data de nascimento:</label>
         <input
-          id="nascimento"
-          v-model="formData.nascimento"
-          type="date"
-          required
+          id="cpf"
+          v-model="props.formData.cpf"
+          type="text"
+          @blur="validateCpf"
         />
+        <span v-if="cpfError" class="error">{{ cpfError }}</span>
+        
+        <label for="nascimento">Data de nascimento:</label>
+        <input id="nascimento" v-model="props.formData.nascimento" />
 
         <label for="telefone">Número de telefone:</label>
-        <input id="telefone" v-model="formData.telefone" type="tel" required />
+        <input id="telefone" v-model="props.formData.telefone" type="text" />
       </div>
 
-      <div v-if="cadastroType === 'PJ'">
+      <div v-if="props.formData?.cadastroType === 'PJ'">
         <label for="razaoSocial">Razão Social:</label>
         <input
           id="razaoSocial"
-          v-model="formData.razaoSocial"
+          v-model="props.formData.razaoSocial"
           type="text"
-          required
         />
 
         <label for="cnpj">CNPJ:</label>
-        <input id="cnpj" v-model="formData.cnpj" type="text" required />
+        <input id="cnpj" v-model="props.formData.cnpj" type="text" />
 
         <label for="abertura">Data de abertura da empresa:</label>
-        <input id="abertura" v-model="formData.abertura" type="date" required />
+        <input id="abertura" v-model="props.formData.abertura" />
 
         <label for="telefone">Telefone:</label>
-        <input id="telefone" v-model="formData.telefone" type="tel" required />
+        <input id="telefone" v-model="props.formData.telefone" type="text" />
       </div>
 
       <div class="actions">
-        <button type="button" @click="previousStep">Voltar</button>
+        <button type="button" @click="props.previousStep">Voltar</button>
         <button type="submit">Continuar</button>
       </div>
     </form>
@@ -49,8 +49,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 
 const props = defineProps({
   formData: Object,
@@ -59,15 +58,60 @@ const props = defineProps({
   nextStep: Function,
 });
 
-const cadastroType = ref(props.formData.cadastroType);
-const formData = ref(props.formData);
+let cpfError = ref("");
 
-const handleNextStep = () => {
-  props.updateFormData(formData.value);
-  props.nextStep();
+const formatCpf = (cpf) => {
+  cpf = cpf.replace(/\D/g, "");
+  cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+  cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+  cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  return cpf;
 };
 
-const previousStep = () => {
-  props.previousStep();
+const validateCpf = () => {
+  const cleanedCpf = props.formData?.cpf.replace(/\D/g, "");
+  if (cleanedCpf.length === 11 && isValidCpf(cleanedCpf)) {
+    props.formData.cpf = formatCpf(cleanedCpf);
+    cpfError.value = "";
+  } else {
+    props.formData.cpf = "";
+    cpfError.value = "CPF inválido";
+  }
+};
+
+const isValidCpf = (cpf) => {
+  if (cpf.length !== 11 || /^(\d)\1*$/.test(cpf)) {
+    return false;
+  }
+  let sum;
+  let rest;
+  sum = 0;
+  for (let i = 1; i <= 9; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+  }
+  rest = (sum * 10) % 11;
+  if (rest === 10 || rest === 11) {
+    rest = 0;
+  }
+  if (rest !== parseInt(cpf.substring(9, 10))) {
+    return false;
+  }
+  sum = 0;
+  for (let i = 1; i <= 10; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+  }
+  rest = (sum * 10) % 11;
+  if (rest === 10 || rest === 11) {
+    rest = 0;
+  }
+  if (rest !== parseInt(cpf.substring(10, 11))) {
+    return false;
+  }
+  return true;
+};
+
+const handleNextStep = () => {
+  props.updateFormData(props.formData);
+  props.nextStep();
 };
 </script>

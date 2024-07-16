@@ -125,6 +125,7 @@ button {
   font-size: 16px;
   box-sizing: border-box;
   background-color: #fff;
+  color: #171616;
   width: 100%;
 }
 
