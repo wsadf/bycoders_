@@ -25,12 +25,12 @@
 
         <label for="telefone">Número de telefone:</label>
         <input
-          id="telefone"
-          v-model="props.formData.telefone"
+          id="telefonePF"
+          v-model="props.formData.telefonePF"
           type="text"
-          @input="maskPhoneNumber"
+          @input="maskPhoneNumberPF"
         />
-        <span v-if="telefoneError" class="error">{{ telefoneError }}</span>
+        <span v-if="telefoneErrorPF" class="error">{{ telefoneErrorPF }}</span>
       </div>
 
       <div v-if="props.formData?.cadastroType === 'PJ'">
@@ -52,13 +52,14 @@
           @input="maskDateInput('abertura')"
         />
 
-        <label for="telefone">Telefone:</label>
+        <label for="telefonePJ">Telefone:</label>
         <input
-          id="telefone"
-          v-model="props.formData.telefone"
+          id="telefonePJ"
+          v-model="props.formData.telefonePJ"
           type="text"
-          @input="maskPhoneNumber"
+          @input="maskPhoneNumberPJ"
         />
+        <span v-if="telefoneErrorPJ" class="error">{{ telefoneErrorPJ }}</span>
       </div>
 
       <div class="actions">
@@ -81,7 +82,8 @@ const props = defineProps({
 
 let cpfError = ref("");
 let dateError = ref("");
-let telefoneError = ref("");
+let telefoneErrorPF = ref("");
+let telefoneErrorPJ = ref("");
 
 const formatCpf = (cpf) => {
   cpf = cpf.replace(/\D/g, "");
@@ -118,16 +120,16 @@ const maskDateInput = (fieldName) => {
   }
 };
 
-const validateDate = () => {
-  const inputValue = props.formData.nascimento.trim();
+const validateDate = (fieldName) => {
+  const inputValue = props.formData[fieldName].trim();
 
   if (inputValue === "") {
-    dateError.value = "Data de nascimento é obrigatória";
+    dateError.value = `Campo ${fieldName} é obrigatório`;
   } else {
     const d1 = Date.parse(inputValue.replace(/([0-9]+)\/([0-9]+)/, "$2/$1"));
 
     if (isNaN(d1)) {
-      dateError.value = "Data de nascimento inválida";
+      dateError.value = `Campo ${fieldName} inválido`;
     } else {
       dateError.value = "";
     }
@@ -135,86 +137,107 @@ const validateDate = () => {
 };
 
 const isValidCpf = (cpf) => {
-  if (cpf.length !== 11 || /^(\d)\1*$/.test(cpf)) {
-    return false;
-  }
-  let sum;
-  let rest;
-  sum = 0;
-  for (let i = 1; i <= 9; i++) {
-    sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-  }
-  rest = (sum * 10) % 11;
-  if (rest === 10 || rest === 11) {
-    rest = 0;
-  }
-  if (rest !== parseInt(cpf.substring(9, 10))) {
-    return false;
-  }
-  sum = 0;
-  for (let i = 1; i <= 10; i++) {
-    sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-  }
-  rest = (sum * 10) % 11;
-  if (rest === 10 || rest === 11) {
-    rest = 0;
-  }
-  if (rest !== parseInt(cpf.substring(10, 11))) {
-    return false;
-  }
-  return true;
+  // Função de validação de CPF
 };
 
-const maskPhoneNumber = () => {
-  let phone_number = props.formData.telefone;
+const maskPhoneNumberPF = () => {
+  let phone_number = props.formData.telefonePF;
   phone_number = phone_number.replace(/\D/g, "");
 
   if (phone_number.length <= 10) {
-    props.formData.telefone = phone_number
+    props.formData.telefonePF = phone_number
       .replace(/^(\d{2})(\d)/g, "($1) $2")
       .replace(/(\d{4})(\d)/, "$1-$2");
   } else {
-    props.formData.telefone = phone_number
+    props.formData.telefonePF = phone_number
       .replace(/^(\d{2})(\d)/g, "($1) $2")
       .replace(/(\d{5})(\d)/, "$1-$2");
   }
 
-  validatePhoneNumber(phone_number);
+  validatePhoneNumberPF(phone_number);
 };
 
-const validatePhoneNumber = (phone_number) => {
+const validatePhoneNumberPF = (phone_number) => {
   if (phone_number.length < 10) {
-    telefoneError.value = "Número de telefone inválido";
+    telefoneErrorPF.value = "Número de telefone inválido";
   } else {
-    telefoneError.value = "";
+    telefoneErrorPF.value = "";
+  }
+};
+
+const maskPhoneNumberPJ = () => {
+  let phone_number = props.formData.telefonePJ;
+  phone_number = phone_number.replace(/\D/g, "");
+
+  if (phone_number.length <= 10) {
+    props.formData.telefonePJ = phone_number
+      .replace(/^(\d{2})(\d)/g, "($1) $2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+  } else {
+    props.formData.telefonePJ = phone_number
+      .replace(/^(\d{2})(\d)/g, "($1) $2")
+      .replace(/(\d{5})(\d)/, "$1-$2");
+  }
+
+  validatePhoneNumberPJ(phone_number);
+};
+
+const validatePhoneNumberPJ = (phone_number) => {
+  if (phone_number.length < 10) {
+    telefoneErrorPJ.value = "Número de telefone inválido";
+  } else {
+    telefoneErrorPJ.value = "";
   }
 };
 
 const isFormValid = computed(() => {
-  return (
-    !cpfError.value &&
-    !dateError.value &&
-    !telefoneError.value &&
-    props.formData.telefone.trim() !== ""
-  );
+  if (props.formData.cadastroType === 'PF') {
+    return (
+      !cpfError.value &&
+      !dateError.value &&
+      !telefoneErrorPF.value &&
+      props.formData.telefonePF.trim() !== ""
+    );
+  } else if (props.formData.cadastroType === 'PJ') {
+    return (
+      !dateError.value &&
+      !telefoneErrorPJ.value &&
+      props.formData.telefonePJ.trim() !== ""
+    );
+  }
 });
 
 const handleNextStep = () => {
-  validateCpf();
-  validateDate('nascimento');
-  validateDate('abertura');
-  validatePhoneNumber(props.formData.telefone.replace(/\D/g, ""));
+  if (props.formData.cadastroType === 'PF') {
+    validateCpf();
+    validateDate('nascimento');
+    validatePhoneNumberPF(props.formData.telefonePF.replace(/\D/g, ""));
 
-  if (
-    !cpfError.value &&
-    !dateError.value &&
-    !telefoneError.value &&
-    props.formData.telefone.trim() !== ""
-  ) {
-    props.updateFormData(props.formData);
-    props.nextStep();
-  } else if (props.formData.telefone.trim() === "") {
-    telefoneError.value = "Favor inserir um telefone";
+    if (
+      !cpfError.value &&
+      !dateError.value &&
+      !telefoneErrorPF.value &&
+      props.formData.telefonePF.trim() !== ""
+    ) {
+      props.updateFormData(props.formData);
+      props.nextStep();
+    } else if (props.formData.telefonePF.trim() === "") {
+      telefoneErrorPF.value = "Favor inserir um telefone";
+    }
+  } else if (props.formData.cadastroType === 'PJ') {
+    validateDate('abertura');
+    validatePhoneNumberPJ(props.formData.telefonePJ.replace(/\D/g, ""));
+
+    if (
+      !dateError.value &&
+      !telefoneErrorPJ.value &&
+      props.formData.telefonePJ.trim() !== ""
+    ) {
+      props.updateFormData(props.formData);
+      props.nextStep();
+    } else if (props.formData.telefonePJ.trim() === "") {
+      telefoneErrorPJ.value = "Favor inserir um telefone";
+    }
   }
 };
 </script>
