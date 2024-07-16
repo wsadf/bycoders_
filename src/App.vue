@@ -2,72 +2,65 @@
   <div id="app">
     <component
       :is="currentStepComponent"
-      :formData="formData"
-      :updateFormData="updateFormData"
-      :previousStep="previousStep"
-      :nextStep="nextStep"
-      :submitForm="submitForm"
+      v-bind="{
+        formData,
+        updateFormData,
+        previousStep,
+        nextStep,
+        submitForm
+      }"
     />
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from "vue";
 import Step1 from "./components/Step1.vue";
 import Step2 from "./components/Step2.vue";
 import Step3 from "./components/Step3.vue";
 import Step4 from "./components/Step4.vue";
 
-export default {
-  setup() {
-    const formData = ref({
-      email: "",
-      cadastroType: "PF",
-      nome: "",
-      cpf: "",
-      nascimento: "",
-      telefone: "",
-      razaoSocial: "",
-      cnpj: "",
-      abertura: "",
-      senha: "",
-    });
+const formData = ref({
+  email: "",
+  cadastroType: "PF",
+  nome: "",
+  cpf: "",
+  nascimento: "",
+  telefone: "",
+  razaoSocial: "",
+  cnpj: "",
+  abertura: "",
+  senha: "",
+});
 
-    const step = ref(1);
+const step = ref(1);
 
-    const steps = [Step1, Step2, Step3, Step4];
-    const currentStepComponent = computed(() => steps[step.value - 1]);
+const steps = [Step1, Step2, Step3, Step4];
+const currentStepComponent = computed(() => steps[step.value - 1]);
 
-    const updateFormData = (data) => {
-      formData.value = { ...formData.value, ...data };
-    };
+const updateFormData = (data) => {
+  formData.value = { ...formData.value, ...data };
+};
 
-    const previousStep = () => {
-      if (step.value > 1) {
-        step.value--;
-      }
-    };
+const previousStep = () => {
+  if (step.value > 1) {
+    step.value--;
+  }
+};
 
-    const nextStep = () => {
-      if (step.value < steps.length) {
-        step.value++;
-      }
-    };
+const nextStep = () => {
+  if (step.value < steps.length) {
+    step.value++;
+  }
+};
 
-    const submitForm = () => {
-      console.log("Form data submitted:", formData.value);
-      // Aqui você pode fazer uma requisição para a API de cadastro.
-    };
+const submitForm = () => {
+  const FormSubmit = Object.fromEntries(
+    Object.entries(formData.value).filter(([_, v]) => v !== "")
+  );
+  
+  console.log("Form data submitted:", FormSubmit);
 
-    return {
-      formData,
-      currentStepComponent,
-      updateFormData,
-      previousStep,
-      nextStep,
-      submitForm,
-    };
-  },
 };
 </script>
 
