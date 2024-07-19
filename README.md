@@ -1,5 +1,27 @@
-# Vue 3 + Vite
+# Projeto de Cadastro com Vue 3, Node JS e Express
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Este é um projeto simples de cadastro de usuários em um formulário de 4 passos, implementado em Node.js com Express e Vue 3. A aplicação não armazena dados permanentemente e simula apenas o envio dos dados para uma API.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+# Configuração do Vue
+## Project setup
+Na raiz do projeto rodar:
+```
+npm install
+```
+Para instalar os pacotes do NPM.
+
+### Compiles and hot-reloads for development
+Em seguida rodar:
+```
+npm run dev
+```
+
+# Configuração do Express
+Para criar o servidor, entrar na pasta `src/server`:
+```
+cd src/server
+```
+E rodar:
+```
+node server.js 
+```
