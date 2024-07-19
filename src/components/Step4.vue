@@ -49,6 +49,13 @@
         <button type="button" @click="submitForm">Cadastrar</button>
       </div>
     </div>
+    <!-- Modal de sucesso -->
+    <div v-if="showSuccessModal" class="modal">
+      <div class="modal-content">
+        <p>Cadastro realizado com sucesso!</p>
+        <button @click="handleModalClose">Fechar</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -57,32 +64,86 @@ import { ref } from "vue";
 
 const props = defineProps(["formData", "previousStep", "submitForm"]);
 const formData = ref(props.formData);
+const showSuccessModal = ref(false);
 
 const previousStep = () => {
   props.previousStep();
 };
 
 const submitForm = () => {
-  let dados = {
-    email: formData.value.email,
-    cadastro: formData.value.cadastroType,
-    nome: formData.value.nome,
-    cpf: formData.value.cpf,
-    nascimento: formData.value.nascimento,
-    telefonePF: formData.value.telefonePF,
-    razao: formData.value.razaoSocial,
-    cnpj: formData.value.cnpj,
-    abertura: formData.value.abertura,
-    telefonePJ: formData.value.telefonePJ,
-    senha: formData.value.senha
-  };
+  let dados = {};
+
+  if (formData.value.email) dados.email = formData.value.email;
+  if (formData.value.cadastroType) dados.cadastro = formData.value.cadastroType;
+  if (formData.value.nome) dados.nome = formData.value.nome;
+  if (formData.value.cpf) dados.cpf = formData.value.cpf;
+  if (formData.value.nascimento) dados.nascimento = formData.value.nascimento;
+  if (formData.value.telefonePF) dados.telefonePF = formData.value.telefonePF;
+  if (formData.value.razaoSocial) dados.razao = formData.value.razaoSocial;
+  if (formData.value.cnpj) dados.cnpj = formData.value.cnpj;
+  if (formData.value.abertura) dados.abertura = formData.value.abertura;
+  if (formData.value.telefonePJ) dados.telefonePJ = formData.value.telefonePJ;
+  if (formData.value.senha) dados.senha = formData.value.senha;
+
   fetch("http://localhost:9000/registration", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dados),
   }).then((response) => {
-    console.log(response);
+    if (response.ok) {
+      showSuccessModal.value = true;
+    }
   });
   props.submitForm();
 };
+
+const handleModalClose = () => {
+  showSuccessModal.value = false;
+
+  formData.value.email = "";
+  formData.value.cadastroType = "PF";
+  formData.value.nome = "";
+  formData.value.cpf = "";
+  formData.value.nascimento = "";
+  formData.value.telefonePF = "";
+  formData.value.razaoSocial = "";
+  formData.value.cnpj = "";
+  formData.value.abertura = "";
+  formData.value.telefonePJ = "";
+  formData.value.senha = "";
+  
+  const navigateToFirstStep = () => {
+    if (props.previousStep !== undefined) {
+      props.previousStep();
+      navigateToFirstStep();
+    }
+  };
+
+  navigateToFirstStep();
+};
 </script>
+
+<style scoped>
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.modal button {
+  margin-top: 10px;
+}
+</style>
