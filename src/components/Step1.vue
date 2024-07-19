@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="phases">Etapa <span>1</span> de 4</p>
+    <span class="phases">Etapa <small>1</small> de 4</span>
     <h2>Seja bem vindo(a)</h2>
     <form @submit.prevent="handleNextStep">
       <label for="email">Endereço de e-mail:</label>
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { defineProps } from "vue";
 
 const props = defineProps({

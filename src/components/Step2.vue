@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="phases">Etapa <span>2</span> de 4</p>
+    <span class="phases">Etapa <small>2</small> de 4</span>
     <form @submit.prevent="handleNextStep">
       <div v-if="props.formData?.cadastroType === 'PF'">
         <h2>Pessoa Física</h2>
@@ -70,13 +70,14 @@
       </div>
 
       <div class="actions">
-        <button class="btn-voltar" type="button" @click="props.previousStep">Voltar</button>
+        <button class="btn-voltar" type="button" @click="props.previousStep">
+          Voltar
+        </button>
         <button type="submit" :disabled="!isFormValid">Continuar</button>
       </div>
     </form>
   </div>
 </template>
-
 
 <script setup>
 import { defineProps, ref, computed } from "vue";
@@ -115,14 +116,14 @@ const validateCpf = () => {
 };
 
 const validarCNPJ = (cnpj) => {
-  cnpj = cnpj.replace(/[^\d]+/g, '');
+  cnpj = cnpj.replace(/[^\d]+/g, "");
 
   if (cnpj.length !== 14) {
-      return false;
+    return false;
   }
 
   if (/^(\d)\1+$/.test(cnpj)) {
-      return false;
+    return false;
   }
 
   let tamanho = cnpj.length - 2;
@@ -131,14 +132,14 @@ const validarCNPJ = (cnpj) => {
   let soma = 0;
   let pos = tamanho - 7;
   for (let i = tamanho; i >= 1; i--) {
-      soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
-      if (pos < 2) {
-          pos = 9;
-      }
+    soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+    if (pos < 2) {
+      pos = 9;
+    }
   }
-  let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
   if (resultado != parseInt(digitos.charAt(0))) {
-      return false;
+    return false;
   }
 
   tamanho = tamanho + 1;
@@ -146,27 +147,30 @@ const validarCNPJ = (cnpj) => {
   soma = 0;
   pos = tamanho - 7;
   for (let i = tamanho; i >= 1; i--) {
-      soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
-      if (pos < 2) {
-          pos = 9;
-      }
+    soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+    if (pos < 2) {
+      pos = 9;
+    }
   }
-  resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
   if (resultado != parseInt(digitos.charAt(1))) {
-      return false;
+    return false;
   }
 
   return true;
 };
 
 const formatarCNPJ = (cnpj) => {
-  cnpj = cnpj.replace(/[^\d]+/g, '');
+  cnpj = cnpj.replace(/[^\d]+/g, "");
 
   if (cnpj.length !== 14) {
-      throw new Error("CNPJ inválido para formatação");
+    throw new Error("CNPJ inválido para formatação");
   }
 
-  return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+  return cnpj.replace(
+    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+    "$1.$2.$3/$4-$5"
+  );
 };
 
 const validateCnpj = () => {
@@ -295,14 +299,14 @@ const validatePhoneNumberPJ = (phone_number) => {
 };
 
 const isFormValid = computed(() => {
-  if (props.formData.cadastroType === 'PF') {
+  if (props.formData.cadastroType === "PF") {
     return (
       !cpfError.value &&
       !dateError.value &&
       !telefoneErrorPF.value &&
       props.formData.telefonePF !== ""
     );
-  } else if (props.formData.cadastroType === 'PJ') {
+  } else if (props.formData.cadastroType === "PJ") {
     return (
       !cnpjError.value &&
       !dateError.value &&
@@ -313,9 +317,9 @@ const isFormValid = computed(() => {
 });
 
 const handleNextStep = () => {
-  if (props.formData.cadastroType === 'PF') {
+  if (props.formData.cadastroType === "PF") {
     validateCpf();
-    validateDate('nascimento');
+    validateDate("nascimento");
     validatePhoneNumberPF(props.formData.telefonePF.replace(/\D/g, ""));
 
     if (
@@ -329,9 +333,9 @@ const handleNextStep = () => {
     } else if (props.formData.telefonePF === "") {
       telefoneErrorPF.value = "Favor inserir um telefone";
     }
-  } else if (props.formData.cadastroType === 'PJ') {
+  } else if (props.formData.cadastroType === "PJ") {
     validateCnpj();
-    validateDate('abertura');
+    validateDate("abertura");
     validatePhoneNumberPJ(props.formData.telefonePJ.replace(/\D/g, ""));
 
     if (
@@ -349,5 +353,4 @@ const handleNextStep = () => {
 };
 </script>
 
-<style>
-</style>
+<style></style>

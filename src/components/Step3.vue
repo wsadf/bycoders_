@@ -1,13 +1,15 @@
 <template>
   <div>
-    <p class="phases">Etapa <span>3</span> de 4</p>
+    <span class="phases">Etapa <small>3</small> de 4</span>
     <h2>Senha de acesso</h2>
     <form @submit.prevent="handleNextStep">
       <label for="senha">Sua senha:</label>
       <input id="senha" v-model="formData.senha" type="password" required />
 
       <div class="actions">
-        <button class="btn-voltar"  type="button" @click="previousStep">Voltar</button>
+        <button class="btn-voltar" type="button" @click="previousStep">
+          Voltar
+        </button>
         <button type="submit">Continuar</button>
       </div>
     </form>
@@ -15,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { defineProps } from "vue";
 
 const props = defineProps({

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <component
+    class="step-component"
       :is="currentStepComponent"
       v-bind="{
         formData,
@@ -65,22 +66,26 @@ const submitForm = () => {
 
 <style>
 body {
-  font-family: "Arial", sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   color: #171616;
   background-color: #fff;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 #app {
-  max-width: 600px;
   width: 100%;
   box-sizing: border-box;
+  padding: 0;
+}
+
+.step-component {
+  padding: 0 20px;
 }
 
 h2 {
@@ -90,9 +95,10 @@ h2 {
 
 .phases {
   text-align: left;
+  display: block;
 }
 
-.phases span {
+.phases small {
   color: #ff9900;
 }
 
@@ -102,7 +108,7 @@ form {
 }
 
 .form-section {
-  padding: 5px;
+  padding: 10px 0;
   text-align: left;
 }
 
@@ -111,6 +117,7 @@ form {
   box-sizing: border-box;
   padding: 12px;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .form-section p {
@@ -119,6 +126,7 @@ form {
 
 .container-radios {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -156,13 +164,13 @@ form {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  border: 1px solid #171616;
+  background-color: transparent;
+  border: 1px solid transparent;
 }
 
 .custom-radio input[type="radio"]:checked ~ .radio-btn:after {
-  display: block;
   background-color: #ff9900;
-  border-color: #ff9900
+  border-color: #ff9900;
 }
 
 label {
@@ -177,7 +185,7 @@ input,
 select,
 button {
   padding: 12px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
@@ -193,11 +201,6 @@ button:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
-  color: #171616;
-}
-
-input[type="radio"] {
-  width: auto;
 }
 
 select {
@@ -206,8 +209,8 @@ select {
 
 .actions {
   display: flex;
-  justify-content: space-between;
-  gap: 30px;
+  flex-direction: column;
+  gap: 10px;
   margin-top: 20px;
 }
 
@@ -243,5 +246,14 @@ button:disabled {
   font-size: 12px;
   display: block;
   text-align: left;
+}
+
+@media (min-width: 600px) {
+  .actions, .container-radios {
+    flex-direction: row;
+    gap: 30px;
+    max-height: none;
+    overflow-y: initial;
+  }
 }
 </style>

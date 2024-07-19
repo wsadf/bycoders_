@@ -1,6 +1,6 @@
 <template>
   <div class="review-form">
-    <p class="phases">Etapa <span>4</span> de 4</p>
+    <span class="phases">Etapa <small>4</small> de 4</span>
     <div class="form-container">
       <h2>Revisar Informações</h2>
 
@@ -13,24 +13,28 @@
         <p class="form-value">{{ formData.cadastroType }}</p>
       </div>
       <div v-if="formData.cadastroType === 'PF'" class="form-section">
-        <p class="form-label"><strong>Nome:</strong></p> 
+        <p class="form-label"><strong>Nome:</strong></p>
         <p class="form-value">{{ formData.nome }}</p>
-        
+
         <p class="form-label"><strong>CPF:</strong></p>
         <p class="form-value">{{ formData.cpf }}</p>
-        
+
         <p class="form-label"><strong>Data de Nascimento:</strong></p>
         <p class="form-value">{{ formData.nascimento }}</p>
-        
+
         <p class="form-label"><strong>Telefone:</strong></p>
         <p class="form-value">{{ formData.telefonePF }}</p>
       </div>
 
       <div v-if="formData.cadastroType === 'PJ'" class="form-section">
-        <p><strong>Razão Social:</strong> {{ formData.razaoSocial }}</p>
-        <p><strong>CNPJ:</strong> {{ formData.cnpj }}</p>
-        <p><strong>Data de Abertura:</strong> {{ formData.abertura }}</p>
-        <p><strong>Telefone:</strong> {{ formData.telefonePJ }}</p>
+        <p class="form-label"><strong>Razão Social:</strong></p>
+        <p class="form-value">{{ formData.razaoSocial }}</p>
+        <p class="form-label"><strong>CNPJ:</strong></p>
+        <p class="form-value">{{ formData.cnpj }}</p>
+        <p class="form-label"><strong>Data de Abertura:</strong></p>
+        <p class="form-value">{{ formData.abertura }}</p>
+        <p class="form-label"><strong>Telefone:</strong></p>
+        <p class="form-value">{{ formData.telefonePJ }}</p>
       </div>
 
       <div class="form-section">
@@ -39,7 +43,9 @@
       </div>
 
       <div class="actions">
-        <button class="btn-voltar" type="button" @click="previousStep">Voltar</button>
+        <button class="btn-voltar" type="button" @click="previousStep">
+          Voltar
+        </button>
         <button type="button" @click="submitForm">Cadastrar</button>
       </div>
     </div>
