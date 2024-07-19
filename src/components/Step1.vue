@@ -36,6 +36,7 @@
       </div>
       <button type="submit">Continuar</button>
     </form>
+    <p class="btn-listar">Listar Usuários Cadastrados</p>
   </div>
 </template>
 

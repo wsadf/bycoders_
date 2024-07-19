@@ -46,9 +46,51 @@
         <button class="btn-voltar" type="button" @click="previousStep">
           Voltar
         </button>
+        <button type="button" @click="openEditModal">Editar</button>
         <button type="button" @click="submitForm">Cadastrar</button>
       </div>
     </div>
+
+    <!-- Modal de edição -->
+    <div v-if="showEditModal" class="modal">
+      <div class="modal-content">
+        <h2>Editar</h2>
+        <label for="edit-email">Endereço de email:</label>
+        <input id="edit-email" v-model="editData.email" type="email" />
+        <label for="edit-type">Tipo de Cadastro:</label>
+        <input id="edit-type" v-model="editData.cadastroType" type="text" />
+        <div v-if="formData.cadastroType === 'PF'">
+          <label for="edit-name">Nome:</label>
+          <input id="edit-name" v-model="editData.nome" type="text" />
+          <label for="edit-cpf">CPF:</label>
+          <input id="edit-cpf" v-model="editData.cpf" type="text" />
+          <label for="edit-nascimento">Data de nascimento:</label>
+          <input id="edit-nascimento" v-model="editData.nascimento" type="text" />
+          <label for="edit-telefonePF">Telefone:</label>
+          <input id="edit-telefonePF" v-model="editData.telefonePF" type="text" />
+        </div>
+        <div v-if="formData.cadastroType === 'PJ'">
+          <label for="edit-social">Razão Social:</label>
+          <input id="edit-social" v-model="editData.razaoSocial" type="text" />
+          <label for="edit-cnpj">CNPJ:</label>
+          <input id="edit-cnpj" v-model="editData.cnpj" type="text" />
+          <label for="edit-abertura">Data de abertura:</label>
+          <input id="edit-abertura" v-model="editData.abertura" type="text" />
+          <label for="edit-telefonePJ">Telefone:</label>
+          <input id="edit-telefonePJ" v-model="editData.telefonePJ" type="text" />
+        </div>
+        
+        <label for="edit-name">Senha:</label>
+        <input id="edit-name" v-model="editData.senha" type="text" />
+        <!-- Repetir para outros campos necessários -->
+
+        <div class="actions">
+          <button @click="handleEditSave">Salvar</button>
+          <button @click="closeEditModal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal de sucesso -->
     <div v-if="showSuccessModal" class="modal">
       <div class="modal-content">
@@ -65,6 +107,26 @@ import { ref } from "vue";
 const props = defineProps(["formData", "previousStep", "submitForm"]);
 const formData = ref(props.formData);
 const showSuccessModal = ref(false);
+
+const showEditModal = ref(false);
+const editData = ref({ ...props.formData });
+
+const openEditModal = () => {
+  editData.value = { ...props.formData };
+  showEditModal.value = true;
+};
+
+const closeEditModal = () => {
+  showEditModal.value = false;
+};
+
+const handleEditSave = () => {
+  console.log('salvar')
+  Object.assign(formData.value, editData.value);
+  closeEditModal();
+  // props.updateFormData(editData.value);
+  // closeEditModal();
+};
 
 const previousStep = () => {
   props.previousStep();
@@ -111,7 +173,7 @@ const handleModalClose = () => {
   formData.value.abertura = "";
   formData.value.telefonePJ = "";
   formData.value.senha = "";
-  
+
   const navigateToFirstStep = () => {
     if (props.previousStep !== undefined) {
       props.previousStep();
