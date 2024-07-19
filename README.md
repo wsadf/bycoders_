@@ -17,7 +17,7 @@ npm run dev
 ```
 
 # Configuração do Express
-Para criar o servidor, entrar na pasta `src` e na pasta 'server':
+Para criar o servidor, entrar na pasta `src/server`:
 ```
 cd src/server
 ```
