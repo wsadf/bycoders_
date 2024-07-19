@@ -7,7 +7,7 @@
         updateFormData,
         previousStep,
         nextStep,
-        submitForm
+        submitForm,
       }"
     />
   </div>
@@ -58,9 +58,8 @@ const submitForm = () => {
   const FormSubmit = Object.fromEntries(
     Object.entries(formData.value).filter(([_, v]) => v !== "")
   );
-  
-  console.log("Form data submitted:", FormSubmit);
 
+  console.log("Form data submitted:", FormSubmit);
 };
 </script>
 
@@ -74,20 +73,27 @@ body {
   align-items: center;
   height: 100vh;
   color: #171616;
+  background-color: #fff;
+  overflow: hidden;
 }
 
 #app {
   max-width: 600px;
   width: 100%;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 20px;
   box-sizing: border-box;
-  margin: 20px;
 }
 
 h2 {
   color: #333;
+  text-align: left;
+}
+
+.phases {
+  text-align: left;
+}
+
+.phases span {
+  color: #ff9900;
 }
 
 form {
@@ -96,15 +102,67 @@ form {
 }
 
 .form-section {
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 5px;
+  padding: 5px;
+  text-align: left;
+}
+
+.form-value {
+  border: 1px solid #171616;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 10px;
 }
 
 .form-section p {
   margin: 5px 0;
+}
+
+.container-radios {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.custom-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding-left: 35px;
+}
+
+.custom-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radio-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border: 1px solid #171616;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.radio-btn:after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #171616;
+}
+
+.custom-radio input[type="radio"]:checked ~ .radio-btn:after {
+  display: block;
+  background-color: #ff9900;
+  border-color: #ff9900
 }
 
 label {
@@ -138,18 +196,28 @@ button:focus {
   color: #171616;
 }
 
+input[type="radio"] {
+  width: auto;
+}
+
 select {
   color: #171616;
 }
 
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 20px;
+}
+
 button {
-  background-color: #171616;
+  background-color: #ff9900;
   height: 48px;
-  border-radius: 28px;
+  border-radius: 10px;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-top: 20px;
 }
 
 button:hover {
@@ -164,8 +232,10 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.actions {
-  display: flex;
+.btn-voltar {
+  background-color: transparent;
+  border-color: #ff9900;
+  color: #ff9900;
 }
 
 .error {
@@ -173,12 +243,5 @@ button:disabled {
   font-size: 12px;
   display: block;
   text-align: left;
-}
-
-@media (max-width: 600px) {
-  #app {
-    padding: 15px;
-    margin: 10px;
-  }
 }
 </style>

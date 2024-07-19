@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="phases">Etapa <span>2</span> de 4</p>
     <form @submit.prevent="handleNextStep">
       <div v-if="props.formData?.cadastroType === 'PF'">
         <h2>Pessoa Física</h2>
@@ -69,7 +70,7 @@
       </div>
 
       <div class="actions">
-        <button type="button" @click="props.previousStep">Voltar</button>
+        <button class="btn-voltar" type="button" @click="props.previousStep">Voltar</button>
         <button type="submit" :disabled="!isFormValid">Continuar</button>
       </div>
     </form>
@@ -349,7 +350,4 @@ const handleNextStep = () => {
 </script>
 
 <style>
-.error {
-  color: red;
-}
 </style>

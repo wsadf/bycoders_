@@ -1,34 +1,45 @@
 <template>
   <div class="review-form">
-    <h2>Passo 4</h2>
+    <p class="phases">Etapa <span>4</span> de 4</p>
     <div class="form-container">
-      <h3>Revisar Informações</h3>
+      <h2>Revisar Informações</h2>
 
       <div class="form-section">
-        <p><strong>Endereço de email:</strong> {{ formData.email }}</p>
-        <p><strong>Tipo de Cadastro:</strong> {{ formData.cadastroType }}</p>
+        <p class="form-label"><strong>Endereço de email:</strong></p>
+        <p class="form-value">{{ formData.email }}</p>
       </div>
-
+      <div class="form-section">
+        <p class="form-label"><strong>Tipo de Cadastro:</strong></p>
+        <p class="form-value">{{ formData.cadastroType }}</p>
+      </div>
       <div v-if="formData.cadastroType === 'PF'" class="form-section">
-        <p><strong>Nome:</strong> {{ formData.nome }}</p>
-        <p><strong>CPF:</strong> {{ formData.cpf }}</p>
-        <p><strong>Data de Nascimento:</strong> {{ formData.nascimento }}</p>
-        <p><strong>Telefone:</strong> {{ formData.telefone }}</p>
+        <p class="form-label"><strong>Nome:</strong></p> 
+        <p class="form-value">{{ formData.nome }}</p>
+        
+        <p class="form-label"><strong>CPF:</strong></p>
+        <p class="form-value">{{ formData.cpf }}</p>
+        
+        <p class="form-label"><strong>Data de Nascimento:</strong></p>
+        <p class="form-value">{{ formData.nascimento }}</p>
+        
+        <p class="form-label"><strong>Telefone:</strong></p>
+        <p class="form-value">{{ formData.telefonePF }}</p>
       </div>
 
       <div v-if="formData.cadastroType === 'PJ'" class="form-section">
         <p><strong>Razão Social:</strong> {{ formData.razaoSocial }}</p>
         <p><strong>CNPJ:</strong> {{ formData.cnpj }}</p>
         <p><strong>Data de Abertura:</strong> {{ formData.abertura }}</p>
-        <p><strong>Telefone:</strong> {{ formData.telefone }}</p>
+        <p><strong>Telefone:</strong> {{ formData.telefonePJ }}</p>
       </div>
 
       <div class="form-section">
-        <p><strong>Senha:</strong> {{ formData.senha }}</p>
+        <p class="form-label"><strong>Senha:</strong></p>
+        <p class="form-value">{{ formData.senha }}</p>
       </div>
 
       <div class="actions">
-        <button type="button" @click="previousStep">Voltar</button>
+        <button class="btn-voltar" type="button" @click="previousStep">Voltar</button>
         <button type="button" @click="submitForm">Cadastrar</button>
       </div>
     </div>
