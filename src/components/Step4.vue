@@ -63,6 +63,26 @@ const previousStep = () => {
 };
 
 const submitForm = () => {
+  let dados = {
+    email: formData.value.email,
+    cadastro: formData.value.cadastroType,
+    nome: formData.value.nome,
+    cpf: formData.value.cpf,
+    nascimento: formData.value.nascimento,
+    telefonePF: formData.value.telefonePF,
+    razao: formData.value.razaoSocial,
+    cnpj: formData.value.cnpj,
+    abertura: formData.value.abertura,
+    telefonePJ: formData.value.telefonePJ,
+    senha: formData.value.senha
+  };
+  fetch("http://localhost:9000/registration", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  }).then((response) => {
+    console.log(response);
+  });
   props.submitForm();
 };
 </script>
