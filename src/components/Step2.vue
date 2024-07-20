@@ -6,6 +6,7 @@
         <h2>Pessoa Física</h2>
         <label for="nome">Nome:</label>
         <input id="nome" v-model="props.formData.nome" type="text" />
+        <span v-if="nameError" class="error">{{ nameError }}</span>
 
         <label for="cpf">CPF:</label>
         <input
@@ -89,6 +90,7 @@ const props = defineProps({
   nextStep: Function,
 });
 
+let nameError = ref("")
 let cpfError = ref("");
 let cnpjError = ref("");
 let dateError = ref("");
@@ -301,9 +303,11 @@ const validatePhoneNumberPJ = (phone_number) => {
 const isFormValid = computed(() => {
   if (props.formData.cadastroType === "PF") {
     return (
+      !nameError.value &&
       !cpfError.value &&
       !dateError.value &&
       !telefoneErrorPF.value &&
+      props.formData.nome !== "" &&
       props.formData.telefonePF !== ""
     );
   } else if (props.formData.cadastroType === "PJ") {

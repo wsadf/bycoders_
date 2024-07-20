@@ -65,9 +65,17 @@
           <label for="edit-cpf">CPF:</label>
           <input id="edit-cpf" v-model="editData.cpf" type="text" />
           <label for="edit-nascimento">Data de nascimento:</label>
-          <input id="edit-nascimento" v-model="editData.nascimento" type="text" />
+          <input
+            id="edit-nascimento"
+            v-model="editData.nascimento"
+            type="text"
+          />
           <label for="edit-telefonePF">Telefone:</label>
-          <input id="edit-telefonePF" v-model="editData.telefonePF" type="text" />
+          <input
+            id="edit-telefonePF"
+            v-model="editData.telefonePF"
+            type="text"
+          />
         </div>
         <div v-if="formData.cadastroType === 'PJ'">
           <label for="edit-social">Razão Social:</label>
@@ -77,12 +85,15 @@
           <label for="edit-abertura">Data de abertura:</label>
           <input id="edit-abertura" v-model="editData.abertura" type="text" />
           <label for="edit-telefonePJ">Telefone:</label>
-          <input id="edit-telefonePJ" v-model="editData.telefonePJ" type="text" />
+          <input
+            id="edit-telefonePJ"
+            v-model="editData.telefonePJ"
+            type="text"
+          />
         </div>
-        
+
         <label for="edit-name">Senha:</label>
         <input id="edit-name" v-model="editData.senha" type="text" />
-        <!-- Repetir para outros campos necessários -->
 
         <div class="actions">
           <button @click="handleEditSave">Salvar</button>
@@ -94,7 +105,7 @@
     <!-- Modal de sucesso -->
     <div v-if="showSuccessModal" class="modal">
       <div class="modal-content">
-        <p>Cadastro realizado com sucesso!</p>
+        <p>{{ message }}</p>
         <button @click="handleModalClose">Fechar</button>
       </div>
     </div>
@@ -107,6 +118,7 @@ import { ref } from "vue";
 const props = defineProps(["formData", "previousStep", "submitForm"]);
 const formData = ref(props.formData);
 const showSuccessModal = ref(false);
+const message = ref("");
 
 const showEditModal = ref(false);
 const editData = ref({ ...props.formData });
@@ -121,11 +133,9 @@ const closeEditModal = () => {
 };
 
 const handleEditSave = () => {
-  console.log('salvar')
+  console.log("salvar");
   Object.assign(formData.value, editData.value);
   closeEditModal();
-  // props.updateFormData(editData.value);
-  // closeEditModal();
 };
 
 const previousStep = () => {
@@ -151,12 +161,22 @@ const submitForm = () => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dados),
-  }).then((response) => {
-    if (response.ok) {
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Erro na requisição: " + response.statusText);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      message.value = data.message;
       showSuccessModal.value = true;
-    }
-  });
-  props.submitForm();
+
+    })
+    .catch((error) => {
+      message.value = "Erro ao cadastrar: " + error.message;
+      showSuccessModal.value = true;
+    });
 };
 
 const handleModalClose = () => {
@@ -180,7 +200,6 @@ const handleModalClose = () => {
       navigateToFirstStep();
     }
   };
-
   navigateToFirstStep();
 };
 </script>

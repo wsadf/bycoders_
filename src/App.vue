@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <component
-    class="step-component"
+      class="step-component"
       :is="currentStepComponent"
       v-bind="{
         formData,
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import Step1 from "./components/Step1.vue";
 import Step2 from "./components/Step2.vue";
 import Step3 from "./components/Step3.vue";
@@ -34,7 +34,7 @@ const formData = ref({
   senha: "",
 });
 
-const step = ref(1);
+const step = ref(getStepFromURL());
 
 const steps = [Step1, Step2, Step3, Step4];
 const currentStepComponent = computed(() => steps[step.value - 1]);
@@ -46,12 +46,14 @@ const updateFormData = (data) => {
 const previousStep = () => {
   if (step.value > 1) {
     step.value--;
+    updateURL(step.value);
   }
 };
 
 const nextStep = () => {
   if (step.value < steps.length) {
     step.value++;
+    updateURL(step.value);
   }
 };
 
@@ -59,9 +61,42 @@ const submitForm = () => {
   const FormSubmit = Object.fromEntries(
     Object.entries(formData.value).filter(([_, v]) => v !== "")
   );
-
-  console.log("Form data submitted:", FormSubmit);
 };
+
+function updateURL(step) {
+  window.history.pushState({ step }, "", `/registration/${step}`);
+}
+
+function getStepFromURL() {
+  const path = window.location.pathname;
+  const stepFromPath = parseInt(path.replace('/registration/', ''), 10);
+  return !isNaN(stepFromPath) && stepFromPath >= 1 && stepFromPath <= steps.length ? stepFromPath : 1;
+}
+
+function ensureValidPath() {
+  const stepFromURL = getStepFromURL();
+  if (stepFromURL !== step.value) {
+    updateURL(stepFromURL);
+  }
+}
+
+onMounted(() => {
+  if (!window.location.pathname.includes('/registration/')) {
+    updateURL(1);
+  } else {
+    ensureValidPath();
+  }
+});
+
+watch(() => window.location.pathname, () => {
+  step.value = getStepFromURL();
+  ensureValidPath();
+});
+
+window.addEventListener('popstate', () => {
+  step.value = getStepFromURL();
+  ensureValidPath();
+});
 </script>
 
 <style>
