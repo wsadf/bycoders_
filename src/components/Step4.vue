@@ -59,7 +59,7 @@
         <input id="edit-email" v-model="editData.email" type="email" />
         <label for="edit-type">Tipo de Cadastro:</label>
         <input id="edit-type" v-model="editData.cadastroType" type="text" />
-        <div v-if="formData.cadastroType === 'PF'">
+        <div v-if="editData.cadastroType === 'PF'">
           <label for="edit-name">Nome:</label>
           <input id="edit-name" v-model="editData.nome" type="text" />
           <label for="edit-cpf">CPF:</label>
@@ -77,7 +77,7 @@
             type="text"
           />
         </div>
-        <div v-if="formData.cadastroType === 'PJ'">
+        <div v-if="editData.cadastroType === 'PJ'">
           <label for="edit-social">Razão Social:</label>
           <input id="edit-social" v-model="editData.razaoSocial" type="text" />
           <label for="edit-cnpj">CNPJ:</label>
@@ -92,13 +92,15 @@
           />
         </div>
 
-        <label for="edit-name">Senha:</label>
-        <input id="edit-name" v-model="editData.senha" type="text" />
+        <label for="edit-senha">Senha:</label>
+        <input id="edit-senha" v-model="editData.senha" type="text" />
 
         <div class="actions">
-          <button @click="handleEditSave">Salvar</button>
+          <button :disabled="!isSaveButtonEnabled" @click="handleEditSave">Salvar</button>
           <button @click="closeEditModal">Cancelar</button>
         </div>
+
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
     </div>
 
@@ -113,15 +115,37 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps(["formData", "previousStep", "submitForm"]);
 const formData = ref(props.formData);
 const showSuccessModal = ref(false);
 const message = ref("");
-
 const showEditModal = ref(false);
 const editData = ref({ ...props.formData });
+const errorMessage = ref("");
+
+const isSaveButtonEnabled = computed(() => {
+  if (!editData.value.email || !editData.value.cadastroType || !editData.value.senha) {
+    return false;
+  }
+
+  if (editData.value.cadastroType === 'PF') {
+    return !!editData.value.nome &&
+           !!editData.value.cpf &&
+           !!editData.value.nascimento &&
+           !!editData.value.telefonePF;
+  }
+
+  if (editData.value.cadastroType === 'PJ') {
+    return !!editData.value.razaoSocial &&
+           !!editData.value.cnpj &&
+           !!editData.value.abertura &&
+           !!editData.value.telefonePJ;
+  }
+
+  return false;
+});
 
 const openEditModal = () => {
   editData.value = { ...props.formData };
@@ -130,10 +154,17 @@ const openEditModal = () => {
 
 const closeEditModal = () => {
   showEditModal.value = false;
+  errorMessage.value = "";
 };
 
 const handleEditSave = () => {
-  console.log("salvar");
+  errorMessage.value = "";
+
+  if (!isSaveButtonEnabled.value) {
+    errorMessage.value = "Por favor, preencha todos os campos.";
+    return;
+  }
+
   Object.assign(formData.value, editData.value);
   closeEditModal();
 };
@@ -225,6 +256,11 @@ const handleModalClose = () => {
 }
 
 .modal button {
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
   margin-top: 10px;
 }
 </style>
