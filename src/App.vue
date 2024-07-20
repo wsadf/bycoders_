@@ -34,7 +34,7 @@ const formData = ref({
   senha: "",
 });
 
-const step = ref(getStepFromURL());
+const step = ref(1);  // Inicialize diretamente com 1
 
 const steps = [Step1, Step2, Step3, Step4];
 const currentStepComponent = computed(() => steps[step.value - 1]);
@@ -64,38 +64,25 @@ const submitForm = () => {
 };
 
 function updateURL(step) {
-  window.history.pushState({ step }, "", `/registration/${step}`);
+  window.history.pushState({}, "", `/registration`);
 }
 
 function getStepFromURL() {
-  const path = window.location.pathname;
-  const stepFromPath = parseInt(path.replace('/registration/', ''), 10);
-  return !isNaN(stepFromPath) && stepFromPath >= 1 && stepFromPath <= steps.length ? stepFromPath : 1;
-}
-
-function ensureValidPath() {
-  const stepFromURL = getStepFromURL();
-  if (stepFromURL !== step.value) {
-    updateURL(stepFromURL);
-  }
+  return 1;
 }
 
 onMounted(() => {
   if (!window.location.pathname.includes('/registration/')) {
     updateURL(1);
-  } else {
-    ensureValidPath();
   }
 });
 
 watch(() => window.location.pathname, () => {
   step.value = getStepFromURL();
-  ensureValidPath();
 });
 
 window.addEventListener('popstate', () => {
   step.value = getStepFromURL();
-  ensureValidPath();
 });
 </script>
 
