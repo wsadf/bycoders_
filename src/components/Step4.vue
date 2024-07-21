@@ -117,7 +117,7 @@
 <script setup>
 import { ref, computed } from "vue";
 
-const props = defineProps(["formData", "previousStep", "submitForm"]);
+const props = defineProps(["formData", "previousStep", "submitForm", "setStep"]);
 const formData = ref(props.formData);
 const showSuccessModal = ref(false);
 const message = ref("");
@@ -225,13 +225,7 @@ const handleModalClose = () => {
   formData.value.telefonePJ = "";
   formData.value.senha = "";
 
-  const navigateToFirstStep = () => {
-    if (props.previousStep !== undefined) {
-      props.previousStep();
-      navigateToFirstStep();
-    }
-  };
-  navigateToFirstStep();
+  props.setStep(1);
 };
 </script>
 

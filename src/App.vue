@@ -9,6 +9,7 @@
         previousStep,
         nextStep,
         submitForm,
+        setStep
       }"
     />
   </div>
@@ -34,7 +35,7 @@ const formData = ref({
   senha: "",
 });
 
-const step = ref(1);  // Inicialize diretamente com 1
+const step = ref(1);
 
 const steps = [Step1, Step2, Step3, Step4];
 const currentStepComponent = computed(() => steps[step.value - 1]);
@@ -70,6 +71,11 @@ function updateURL(step) {
 function getStepFromURL() {
   return 1;
 }
+
+const setStep = (newStep) => {
+  step.value = newStep;
+  updateURL(newStep);
+};
 
 onMounted(() => {
   if (!window.location.pathname.includes('/registration/')) {
