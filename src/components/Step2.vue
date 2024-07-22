@@ -356,5 +356,3 @@ const handleNextStep = () => {
   }
 };
 </script>
-
-<style></style>

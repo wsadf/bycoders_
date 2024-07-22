@@ -117,7 +117,14 @@
 <script setup>
 import { ref, computed } from "vue";
 
-const props = defineProps(["formData", "previousStep", "submitForm", "setStep"]);
+const props = defineProps({
+  formData: Object,
+  updateFormData: Function,
+  previousStep: Function,
+  nextStep: Function,
+  setStep: Function
+});
+
 const formData = ref(props.formData);
 const showSuccessModal = ref(false);
 const message = ref("");
@@ -230,6 +237,23 @@ const handleModalClose = () => {
 </script>
 
 <style scoped>
+.form-section {
+  padding: 10px 0;
+  text-align: left;
+}
+
+.form-value {
+  border: 1px solid #171616;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.form-section p {
+  margin: 5px 0;
+}
+
 .modal {
   position: fixed;
   top: 0;

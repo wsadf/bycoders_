@@ -64,5 +64,3 @@ const handleNextStep = () => {
   }
 };
 </script>
-
-<style scoped></style>

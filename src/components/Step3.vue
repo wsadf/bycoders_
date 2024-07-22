@@ -24,7 +24,7 @@ const props = defineProps({
   formData: Object,
   updateFormData: Function,
   previousStep: Function,
-  nextStep: Function,
+  nextStep: Function
 });
 
 const formData = ref(props.formData);
