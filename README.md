@@ -1,10 +1,10 @@
 # Projeto de Cadastro com Vue 3, Node JS e Express
 
-Este é um projeto simples de cadastro de usuários em um formulário de 4 passos, implementado em Node.js com Express e Vue 3. A aplicação não armazena dados permanentemente e simula apenas o envio dos dados para uma API.
+Este projeto é uma aplicação web de cadastro de usuários, dividida em um formulário de 4 passos. Foi desenvolvido com Vue 3 no frontend e Node.js com Express no backend. A aplicação simula o envio de dados para uma API, mas não realiza o armazenamento permanente dos dados.
 
 # Configuração do Vue
 ## Project setup
-Na raiz do projeto rodar:
+Na raiz do projeto, instale as dependências do frontend executando o comando:
 ```
 npm install
 ```
@@ -16,12 +16,12 @@ Em seguida rodar:
 npm run dev
 ```
 
-# Configuração do Express
-Para criar o servidor, entrar na pasta `src/server`:
+# Configuração do Backend (Express)
+Navegue até o diretório src/server onde o servidor Express está localizado:
 ```
 cd src/server
 ```
-E rodar:
+Para iniciar o servidor Express, execute o comando::
 ```
 node server.js 
 ```
