@@ -62,10 +62,21 @@
     step.value = newStep;
   };
   
+  const fetchData = async () => {
+  try {
+    const response = await fetch('/registration');
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+};
+
   onMounted(() => {
     if (window.location.pathname !== '/registration') {
       window.location.href = '/registration';
     }
+    fetchData();
   });
   </script>
 
